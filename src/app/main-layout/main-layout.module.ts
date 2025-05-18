@@ -1,10 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { MainLayoutComponent } from './main-layout.component';
-import { ReportsModule } from './reports/reports.module';
-import { UsersModule } from './users/users.module';
-import { FilesModule } from './files/files.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,16 +9,39 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
+const routes: Routes = [
+  {
+    path: '',
+    component: MainLayoutComponent,
+    children: [
+      {
+        path: 'reports',
+        loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule)
+      },
+      {
+        path: 'users',
+        loadChildren: () => import('./users/users.module').then(m => m.UsersModule)
+      },
+      {
+        path: 'files',
+        loadChildren: () => import('./files/files.module').then(m => m.FilesModule)
+      },
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'reports'
+      }
+    ]
+  }
+];
+
 @NgModule({
   declarations: [
     MainLayoutComponent
   ],
   imports: [
     CommonModule,
-    RouterModule,
-    ReportsModule,
-    UsersModule,
-    FilesModule,
+    RouterModule.forChild(routes),
     MatButtonModule,
     MatCardModule,
     MatIconModule,

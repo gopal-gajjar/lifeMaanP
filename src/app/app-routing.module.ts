@@ -1,30 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MainLayoutComponent } from './main-layout/main-layout.component';
+// import { ModulesResolver } from './core/resolvers/modules.resolver';
+import { ModulesResolver } from './core/resolvers/modules.resolver';
+import { ModuleGuard } from './core/guards/module.guard';
 
 const routes: Routes = [
   {
     path: '',
-    component: MainLayoutComponent,
-    children: [
-      {
-        path: 'reports',
-        loadChildren: () => import('./main-layout/reports/reports.module').then(m => m.ReportsModule)
-      },
-      {
-        path: 'users',
-        loadChildren: () => import('./main-layout/users/users.module').then(m => m.UsersModule)
-      },
-      {
-        path: 'files',
-        loadChildren: () => import('./main-layout/files/files.module').then(m => m.FilesModule)
-      },
-      {
-        path: '',
-        redirectTo: 'reports',
-        pathMatch: 'full'
-      }
-    ]
+    canActivate: [ModuleGuard],
+    loadChildren: () => import('./main-layout/main-layout.module').then(m => m.MainLayoutModule)
   }
 ];
 
