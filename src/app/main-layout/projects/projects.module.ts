@@ -7,62 +7,60 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { CoreModule } from '../../core/core.module';
-import { ReportListComponent } from './report-list/report-list.component';
-import { ReportEditComponent } from './report-edit/report-edit.component';
-import { ReportDetailComponent } from './report-detail/report-detail.component';
+import { MatSelectModule } from '@angular/material/select';
+import { ProjectListComponent } from './project-list/project-list.component';
+import { ProjectEditComponent } from './project-edit/project-edit.component';
+import { ProjectDetailComponent } from './project-detail/project-detail.component';
 import { AccessGuard } from '../../core/guards/access.guard';
 import { AccessDeniedComponent } from '../../core/components/access-denied/access-denied.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: ReportListComponent,
+    component: ProjectListComponent,
     canActivate: [AccessGuard],
-    data: { module: 'Reports', action: 'Reports.ListReports' }
+    data: { module: 'Projects', action: 'Projects.ListProjects' }
   },
   {
     path: 'new',
-    component: ReportEditComponent,
+    component: ProjectEditComponent,
     canActivate: [AccessGuard],
-    data: { module: 'Reports', action: 'Reports.CreateReports' }
+    data: { module: 'Projects', action: 'Projects.CreateProjects' }
+  },
+  {
+    path: ':id',
+    component: ProjectDetailComponent,
+    canActivate: [AccessGuard],
+    data: { module: 'Projects', action: 'Projects.GetProjects' }
+  },
+  {
+    path: ':id/edit',
+    component: ProjectEditComponent,
+    canActivate: [AccessGuard],
+    data: { module: 'Projects', action: 'Projects.EditProjects' }
   },
   {
     path: 'access-denied',
     component: AccessDeniedComponent
-  },
-  {
-    path: ':id',
-    component: ReportDetailComponent,
-    canActivate: [AccessGuard],
-    data: { module: 'Reports', action: 'Reports.GetReports' }
-  },
-  {
-    path: ':id/edit',
-    component: ReportEditComponent,
-    canActivate: [AccessGuard],
-    data: { module: 'Reports', action: 'Reports.UpdateReports' }
-  },
+  }
 ];
 
 @NgModule({
   declarations: [
-    ReportListComponent,
-    ReportEditComponent,
-    ReportDetailComponent
+    ProjectListComponent,
+    ProjectEditComponent,
+    ProjectDetailComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
-    CoreModule,
     RouterModule.forChild(routes),
     MatButtonModule,
     MatCardModule,
     MatIconModule,
     MatInputModule,
     MatFormFieldModule,
-    MatTooltipModule
+    MatSelectModule
   ]
 })
-export class ReportsModule { } 
+export class ProjectsModule { } 

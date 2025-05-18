@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { GrantDirective } from '../core/directives/grant.directive';
+import { CoreModule } from '../core/core.module';
 
 const routes: Routes = [
   {
@@ -28,6 +28,14 @@ const routes: Routes = [
         loadChildren: () => import('./files/files.module').then(m => m.FilesModule)
       },
       {
+        path: 'projects',
+        loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsModule)
+      },
+      {
+        path: 'settings',
+        loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule)
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: 'reports'
@@ -38,11 +46,11 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    MainLayoutComponent,
-    GrantDirective
+    MainLayoutComponent
   ],
   imports: [
     CommonModule,
+    CoreModule,
     RouterModule.forChild(routes),
     MatButtonModule,
     MatCardModule,

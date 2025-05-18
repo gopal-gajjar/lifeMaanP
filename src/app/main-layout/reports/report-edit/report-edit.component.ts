@@ -7,6 +7,7 @@ interface Report {
   title: string;
   description: string;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 @Component({
@@ -76,7 +77,8 @@ export class ReportEditComponent implements OnInit {
     id: 0,
     title: '',
     description: '',
-    createdAt: new Date()
+    createdAt: new Date(),
+    updatedAt: new Date()
   };
   isNew = true;
 
@@ -94,7 +96,11 @@ export class ReportEditComponent implements OnInit {
         const reports = JSON.parse(storedReports);
         const report = reports.find((r: Report) => r.id === +id);
         if (report) {
-          this.report = { ...report, createdAt: new Date(report.createdAt) };
+          this.report = {
+            ...report,
+            createdAt: new Date(report.createdAt),
+            updatedAt: new Date(report.updatedAt || report.createdAt)
+          };
         }
       }
     }
@@ -110,10 +116,13 @@ export class ReportEditComponent implements OnInit {
 
     if (this.isNew) {
       this.report.id = reports.length + 1;
+      this.report.createdAt = new Date();
+      this.report.updatedAt = new Date();
       reports.push(this.report);
     } else {
       const index = reports.findIndex(r => r.id === this.report.id);
       if (index !== -1) {
+        this.report.updatedAt = new Date();
         reports[index] = this.report;
       }
     }

@@ -8,35 +8,27 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { UserListComponent } from './user-list/user-list.component';
-import { UserEditComponent } from './user-edit/user-edit.component';
-import { AccessGuard } from 'src/app/core/guards/access.guard';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { AccessGuard } from '../../core/guards/access.guard';
+import { AccessDeniedComponent } from '../../core/components/access-denied/access-denied.component';
+import { SettingsComponent } from 'src/app/main-layout/settings/settings.component';
 
 const routes: Routes = [
-  { 
-    path: '', 
-    component: UserListComponent,
+  {
+    path: '',
+    component: SettingsComponent,
     canActivate: [AccessGuard],
-    data: { module: "Users", action: 'Users.ListUsers'} 
+    data: { module: 'Settings', action: 'Settings.ListSettings' }
   },
-  { 
-    path: 'new', 
-    component: UserEditComponent,
-    canActivate: [AccessGuard],
-    data: { module: "Users", action: 'Users.CreateUsers'} 
-  },
-  { 
-    path: ':id', 
-    component: UserEditComponent,
-    canActivate: [AccessGuard],
-    data: { module: "Users", action: 'Users.UpdateUsers'}
-   }
+  {
+    path: 'access-denied',
+    component: AccessDeniedComponent
+  }
 ];
 
 @NgModule({
   declarations: [
-    UserListComponent,
-    UserEditComponent
+    SettingsComponent
   ],
   imports: [
     CommonModule,
@@ -47,7 +39,8 @@ const routes: Routes = [
     MatIconModule,
     MatInputModule,
     MatFormFieldModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSlideToggleModule
   ]
 })
-export class UsersModule { } 
+export class SettingsModule { } 

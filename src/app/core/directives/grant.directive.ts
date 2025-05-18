@@ -1,34 +1,34 @@
-import { Directive, ElementRef, Input, OnInit } from '@angular/core';
-import { GrantService } from '../services/grant.service';
+import { Directive, Input, TemplateRef, ViewContainerRef, OnInit, ChangeDetectorRef } from '@angular/core';
+import { AccessService } from '../services/access.service';
 
 @Directive({
   selector: '[appGrant]'
 })
 export class GrantDirective implements OnInit {
-  @Input() moduleName!: string;
-  @Input() action!: string;  // Now expects full action name like "Reports.GetReports"
-  @Input() mode: 'hide' | 'disable' = 'hide';
+  @Input('appGrant') module: string = '';
+  @Input('appGrantAction') action: string = '';
+  private hasAccess = false;
 
   constructor(
-    private elementRef: ElementRef,
-    private grantService: GrantService
+    private templateRef: TemplateRef<any>,
+    private viewContainer: ViewContainerRef,
+    private accessService: AccessService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.updateView();
+    this.accessService.getAccessibleComponents(this.module).subscribe(actions => {
+      this.hasAccess = actions.includes(this.action);
+      this.updateView();
+      this.cdr.detectChanges();
+    });
   }
 
   private updateView() {
-    const hasGrant = this.grantService.hasGrant(this.moduleName, this.action);
-
-    if (this.mode === 'hide') {
-      this.elementRef.nativeElement.style.display = hasGrant ? '' : 'none';
-    } else if (this.mode === 'disable') {
-      if (hasGrant) {
-        this.elementRef.nativeElement.removeAttribute('disabled');
-      } else {
-        this.elementRef.nativeElement.setAttribute('disabled', 'true');
-      }
+    if (this.hasAccess) {
+      this.viewContainer.createEmbeddedView(this.templateRef);
+    } else {
+      this.viewContainer.clear();
     }
   }
 } 

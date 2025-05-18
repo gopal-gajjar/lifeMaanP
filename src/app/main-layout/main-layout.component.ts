@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
-import { ModuleService } from '../core/services/module.service';
+import { AccessService } from '../core/services/access.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -66,20 +66,24 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
 
   private readonly moduleIcons: { [key: string]: string } = {
     Reports: 'assessment',
+    Files: 'folder',
     Users: 'people',
-    Files: 'folder'
+    Projects: 'work',
+    Settings: 'settings',
   };
 
   constructor(
-    private moduleService: ModuleService,
+    private accessService: AccessService,
     private router: Router
   ) {}
 
   ngOnInit() {
-    this.moduleService.getAvailableModules().subscribe({
+    this.accessService.getAccessibleModules().subscribe({
       next: (moduleNames) => {
         this.modules = moduleNames;
-        console.log('Modules loaded:', this.modules);
+        if (this.modules.length === 0) {
+          console.warn('No modules available for the current user');
+        }
       },
       error: (error) => {
         console.error('Error loading modules:', error);

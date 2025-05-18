@@ -14,19 +14,31 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { FileListComponent } from './file-list/file-list.component';
 import { FileEditComponent } from './file-edit/file-edit.component';
 import { FileSizePipe } from './file-size.pipe';
+import { AccessGuard } from 'src/app/core/guards/access.guard';
 
 const routes: Routes = [
-  { path: '', component: FileListComponent },
-  { path: 'new', component: FileEditComponent },
-  { path: ':id', component: FileEditComponent }
+  { 
+    path: '', 
+    component: FileListComponent,
+    canActivate: [AccessGuard],
+    data: { module: 'Files', action: 'Files.ListFiles' }
+  },
+  { 
+    path: 'new', 
+    component: FileEditComponent,
+    canActivate: [AccessGuard],
+    data: { module: 'Files', action: 'Files.CreateFiles' }
+ },
+  { 
+    path: ':id', 
+    component: FileEditComponent,
+    canActivate: [AccessGuard],
+    data: { module: 'Files', action: 'Files.UpdateFiles' }
+  },
 ];
 
 @NgModule({
-  declarations: [
-    FileListComponent,
-    FileEditComponent,
-    FileSizePipe
-  ],
+  declarations: [FileListComponent, FileEditComponent, FileSizePipe],
   imports: [
     CommonModule,
     FormsModule,
@@ -39,7 +51,7 @@ const routes: Routes = [
     MatSelectModule,
     MatTableModule,
     MatSortModule,
-    MatPaginatorModule
-  ]
+    MatPaginatorModule,
+  ],
 })
-export class FilesModule { } 
+export class FilesModule {}

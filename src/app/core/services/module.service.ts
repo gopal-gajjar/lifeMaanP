@@ -10,8 +10,8 @@ export class ModuleService {
   private modulesCache: string[] | null = null;
   private availableModules = new BehaviorSubject<string[]>([]);
 
-  // Mock modules data - just module names in title case
-  private readonly mockModules = ['Reports', 'Users', 'Files'];
+  // Available modules based on the provided permissions
+  private readonly mockModules = ['Reports', 'Files'];
 
   constructor(private grantService: GrantService) {
     // Initialize with mock data
@@ -26,7 +26,6 @@ export class ModuleService {
       return of(this.modulesCache);
     }
 
-    // Simulate API call
     return of(this.mockModules).pipe(
       tap(modules => {
         this.modulesCache = modules;
