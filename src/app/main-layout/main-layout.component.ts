@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Inject } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ModuleService } from '../core/services/module.service';
 
@@ -11,11 +11,10 @@ import { ModuleService } from '../core/services/module.service';
         <mat-toolbar color="primary">Dashboard</mat-toolbar>
         <mat-nav-list>
           <a mat-list-item *ngFor="let module of modules" 
-             [routerLink]="[module.toLowerCase()]" 
-             routerLinkActive="active"
-             (click)="onModuleClick(module)">
+             [routerLink]="['/', module.toLowerCase()]"
+             routerLinkActive="active">
             <mat-icon matListItemIcon>{{getModuleIcon(module)}}</mat-icon>
-            <span matListItemTitle>{{module}}</span>
+            <span matListItemTitle>{{ module }}</span>
           </a>
         </mat-nav-list>
       </mat-sidenav>
@@ -72,20 +71,15 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
   };
 
   constructor(
-    @Inject(ModuleService) private moduleService: ModuleService,
-    private router: Router,
-    private route: ActivatedRoute
+    private moduleService: ModuleService,
+    private router: Router
   ) {}
 
   ngOnInit() {
-    console.log('Initializing MainLayoutComponent');
     this.moduleService.getAvailableModules().subscribe({
       next: (moduleNames) => {
-        console.log('Received modules:', moduleNames);
         this.modules = moduleNames;
-        if (this.modules.length === 0) {
-          console.warn('No modules available for the current user');
-        }
+        console.log('Modules loaded:', this.modules);
       },
       error: (error) => {
         console.error('Error loading modules:', error);
@@ -94,17 +88,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    console.log('AfterViewInit - Opening sidenav');
-    setTimeout(() => {
-      if (this.sidenav) {
-        this.sidenav.open();
-      }
-    });
-  }
-
-  onModuleClick(module: string) {
-    console.log('Module clicked:', module);
-    this.router.navigate([module.toLowerCase()]);
+    this.sidenav.open();
   }
 
   getModuleIcon(moduleName: string): string {

@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { GrantDirective } from '../core/directives/grant.directive';
 
 const routes: Routes = [
   {
@@ -37,7 +38,8 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    MainLayoutComponent
+    MainLayoutComponent,
+    GrantDirective
   ],
   imports: [
     CommonModule,

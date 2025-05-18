@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, switchMap } from 'rxjs/operators';
+import { GrantService } from './grant.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +13,12 @@ export class ModuleService {
   // Mock modules data - just module names in title case
   private readonly mockModules = ['Reports', 'Users', 'Files'];
 
-  constructor() {
+  constructor(private grantService: GrantService) {
     // Initialize with mock data
     this.availableModules.next(this.mockModules);
     this.modulesCache = this.mockModules;
+    // Fetch grants for available modules
+    this.fetchGrants(this.mockModules);
   }
 
   getAvailableModules(): Observable<string[]> {
@@ -28,8 +31,14 @@ export class ModuleService {
       tap(modules => {
         this.modulesCache = modules;
         this.availableModules.next(modules);
+        // Fetch grants for new modules
+        this.fetchGrants(modules);
       })
     );
+  }
+
+  private fetchGrants(modules: string[]) {
+    this.grantService.getGrants(modules).subscribe();
   }
 
   getFirstAvailableModule(): string {
@@ -43,5 +52,6 @@ export class ModuleService {
   clearCache() {
     this.modulesCache = null;
     this.availableModules.next([]);
+    this.grantService.clearCache();
   }
 }
