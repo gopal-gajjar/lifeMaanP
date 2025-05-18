@@ -19,13 +19,14 @@ export class AccessService {
     this.moduleCache = ['Reports', 'Files', 'Users', 'Projects', 'Settings'];
     this.actionCache = {
       'Reports': [
-        // 'Reports.ListReports',
+        'Reports.ListReports',
         'Reports.GetReports',
         'Reports.CreateReports',
         'Reports.DeleteReports',
         'Reports.UpdateReports'
       ],
       'Files': [
+        'Files.UpdateFiles',
         'Files.ListFiles',
         'Files.GetFiles',
         'Files.UploadFiles',
@@ -51,10 +52,10 @@ export class AccessService {
       ],
       'Settings': [
         'Settings.ListSettings',
-        'Settings.GetSettings',
+        // 'Settings.GetSettings',
         'Settings.UpdateSettings',
-        'Settings.ManageRoles',
-        'Settings.ManagePermissions'
+        // 'Settings.ManageRoles',
+        // 'Settings.ManagePermissions'
       ]
     };
 

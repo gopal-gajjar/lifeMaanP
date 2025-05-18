@@ -36,7 +36,7 @@ interface Report {
             <button *appGrant="'Reports'; action: grants['view']" mat-icon-button color="primary" (click)="viewReport(report)" matTooltip="View Details">
               <mat-icon>visibility</mat-icon>
             </button>
-            <button *appGrant="'Reports'; action: grants['edit']" mat-icon-button color="primary" (click)="editReport(report)" matTooltip="Edit Report">
+            <button *appGrant="'Reports'; action: grants['update']" mat-icon-button color="primary" (click)="editReport(report)" matTooltip="Edit Report">
               <mat-icon>edit</mat-icon>
             </button>
             <button *appGrant="'Reports'; action: grants['delete']" mat-icon-button color="warn" (click)="deleteReport(report)" matTooltip="Delete Report">
@@ -81,14 +81,13 @@ export class ReportListComponent implements OnInit {
   reports: Report[] = [];
 
   grants: {[key: string]: string} = {
-    edit: 'Reports.UpdateReports',
+    update: 'Reports.UpdateReports',
     view: 'Reports.GetReports',
     delete: 'Reports.DeleteReports',
     create: 'Reports.CreateReports'
   }
   constructor(
-    private router: Router,
-    private accessService: AccessService
+    private router: Router
   ) {}
 
   ngOnInit() {

@@ -19,7 +19,7 @@ interface File {
     <div class="file-list">
       <div class="header">
         <h2>Files</h2>
-        <button mat-raised-button color="primary" (click)="createFile()">
+        <button *appGrant="'Files'; action: grants['create']" mat-raised-button color="primary" (click)="createFile()">
           <mat-icon>add</mat-icon>
           Upload File
         </button>
@@ -60,10 +60,10 @@ interface File {
         <ng-container matColumnDef="actions">
           <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
           <mat-cell *matCellDef="let file">
-            <button mat-icon-button color="primary" (click)="editFile(file)">
+            <button *appGrant="'Files'; action: grants['update']" mat-icon-button color="primary" (click)="editFile(file)">
               <mat-icon>edit</mat-icon>
             </button>
-            <button mat-icon-button color="warn" (click)="deleteFile(file)">
+            <button *appGrant="'Files'; action: grants['delete']" mat-icon-button color="warn" (click)="deleteFile(file)">
               <mat-icon>delete</mat-icon>
             </button>
           </mat-cell>
@@ -102,6 +102,12 @@ export class FileListComponent implements OnInit {
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  grants: {[key: string]: string} = {
+    create: 'Files.UploadFiles',
+    update: 'Files.UpdateFiles',
+    delete: 'Files.DeleteFiles'
+  }
 
   constructor(private router: Router) {
     this.dataSource = new MatTableDataSource<File>([]);

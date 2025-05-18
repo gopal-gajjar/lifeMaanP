@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { AccessService } from '../../core/services/access.service';
+import { Component } from '@angular/core';
 
 interface Settings {
   theme: 'light' | 'dark';
@@ -50,8 +49,8 @@ interface Settings {
               Enable Notifications
             </mat-slide-toggle>
 
-            <div class="actions" *ngIf="hasEditAccess">
-              <button mat-raised-button color="primary" type="submit" [disabled]="!settingsForm.form.valid">
+            <div class="actions">
+              <button *appGrant="'Settings'; action: grants['update']" mat-raised-button color="primary" type="submit" [disabled]="!settingsForm.form.valid">
                 Save Settings
               </button>
             </div>
@@ -80,25 +79,20 @@ interface Settings {
     }
   `]
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent {
   settings: Settings = {
     theme: 'light',
     notifications: true,
     language: 'en',
     timezone: 'UTC'
   };
-  hasEditAccess = false;
+  // hasEditAccess = false;
 
-  constructor(private accessService: AccessService) {}
-
-  ngOnInit() {
-    this.accessService.getAccessibleComponents('Settings').subscribe(actions => {
-      this.hasEditAccess = actions.includes('edit');
-    });
-
-    // In a real app, load settings from a service
-    // For now, using default values
+  grants: {[key: string]: string} = {
+    update: 'Settings.UpdateSettings'
   }
+
+  constructor() {}
 
   saveSettings() {
     // In a real app, save to a service

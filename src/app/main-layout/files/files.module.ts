@@ -15,25 +15,31 @@ import { FileListComponent } from './file-list/file-list.component';
 import { FileEditComponent } from './file-edit/file-edit.component';
 import { FileSizePipe } from './file-size.pipe';
 import { AccessGuard } from 'src/app/core/guards/access.guard';
+import { AccessDeniedComponent } from 'src/app/core/components/access-denied/access-denied.component';
+import { CoreModule } from 'src/app/core/core.module';
 
 const routes: Routes = [
-  { 
-    path: '', 
+  {
+    path: '',
     component: FileListComponent,
     canActivate: [AccessGuard],
-    data: { module: 'Files', action: 'Files.ListFiles' }
+    data: { module: 'Files', action: 'Files.ListFiles' },
   },
-  { 
-    path: 'new', 
+  {
+    path: 'new',
     component: FileEditComponent,
     canActivate: [AccessGuard],
-    data: { module: 'Files', action: 'Files.CreateFiles' }
- },
-  { 
-    path: ':id', 
+    data: { module: 'Files', action: 'Files.CreateFiles' },
+  },
+  {
+    path: 'access-denied',
+    component: AccessDeniedComponent,
+  },
+  {
+    path: ':id',
     component: FileEditComponent,
     canActivate: [AccessGuard],
-    data: { module: 'Files', action: 'Files.UpdateFiles' }
+    data: { module: 'Files', action: 'Files.UpdateFiles' },
   },
 ];
 
@@ -42,6 +48,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    CoreModule,
     RouterModule.forChild(routes),
     MatButtonModule,
     MatCardModule,

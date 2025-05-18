@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AccessService } from '../../../core/services/access.service';
 
 interface Project {
   id: number;
@@ -40,7 +39,7 @@ interface Project {
 
         <div class="actions">
           <button mat-button type="button" (click)="cancel()">Cancel</button>
-          <button mat-raised-button color="primary" type="submit" [disabled]="!projectForm.form.valid">
+          <button *appGrant="'Projects'; action: isNewProject ? grants['create']: grants['update']" mat-raised-button color="primary" type="submit" [disabled]="!projectForm.form.valid">
             {{ isNewProject ? 'Create' : 'Save' }}
           </button>
         </div>
@@ -75,11 +74,14 @@ export class ProjectEditComponent implements OnInit {
     updatedAt: new Date()
   };
   isNewProject = true;
+  grants: {[key: string]: string} = {
+    create: 'Projects.CreateProjects',
+    update: 'Projects.UpdateProjects'
+  }
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
-    private accessService: AccessService
+    private router: Router
   ) {}
 
   ngOnInit() {

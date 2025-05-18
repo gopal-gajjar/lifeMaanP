@@ -18,7 +18,7 @@ interface Project {
       <div class="header">
         <h1>Project Details</h1>
         <div class="actions">
-          <button *ngIf="hasEditAccess" mat-raised-button color="primary" (click)="editProject()">
+          <button *appGrant="'Projects'; action: grants['update']" mat-raised-button color="primary" (click)="editProject()">
             <mat-icon>edit</mat-icon>
             Edit Project
           </button>
@@ -143,18 +143,17 @@ export class ProjectDetailComponent implements OnInit {
     createdAt: new Date(),
     updatedAt: new Date()
   };
-  hasEditAccess = false;
+  // hasEditAccess = false;
+  grants: {[key: string]: string} = {
+    update: 'Projects.UpdateProjects'
+  }
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
-    private accessService: AccessService
+    private router: Router
   ) {}
 
   ngOnInit() {
-    this.accessService.getAccessibleComponents('Projects').subscribe(actions => {
-      this.hasEditAccess = actions.includes('edit');
-    });
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {

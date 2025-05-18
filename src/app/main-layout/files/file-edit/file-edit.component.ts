@@ -45,7 +45,7 @@ interface File {
 
         <div class="actions">
           <button mat-button type="button" (click)="goBack()">Cancel</button>
-          <button mat-raised-button color="primary" type="submit">Save</button>
+          <button *appGrant="'Files'; action: isNew ? grants['create']: grants['update']" mat-raised-button color="primary" type="submit">Save</button>
         </div>
       </form>
     </div>
@@ -77,7 +77,10 @@ export class FileEditComponent implements OnInit {
     uploadedAt: new Date()
   };
   isNew = true;
-
+  grants: {[key:string]: string} = {
+    create: 'Files.UploadFiles',
+    update: 'Files.UpdateFiles'
+  }
   constructor(
     private route: ActivatedRoute,
     private router: Router

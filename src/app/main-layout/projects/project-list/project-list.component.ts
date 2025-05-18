@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AccessService } from '../../../core/services/access.service';
 
 interface Project {
   id: number;
@@ -17,7 +16,7 @@ interface Project {
     <div class="container">
       <div class="header">
         <h1>Projects</h1>
-        <button *appGrant="'Projects'; action: 'create'" mat-raised-button color="primary" (click)="createProject()">
+        <button *appGrant="'Projects'; action: grants['create']" mat-raised-button color="primary" (click)="createProject()">
           <mat-icon>add</mat-icon>
           Create New Project
         </button>
@@ -35,13 +34,13 @@ interface Project {
             <p class="date">Last Updated: {{ project.updatedAt | date }}</p>
           </mat-card-content>
           <mat-card-actions>
-            <button *appGrant="'Projects'; action: 'view'" mat-icon-button color="primary" (click)="viewProject(project)" matTooltip="View Details">
+            <button *appGrant="'Projects'; action: grants['view']" mat-icon-button color="primary" (click)="viewProject(project)" matTooltip="View Details">
               <mat-icon>visibility</mat-icon>
             </button>
-            <button *appGrant="'Projects'; action: 'edit'" mat-icon-button color="primary" (click)="editProject(project)" matTooltip="Edit Project">
+            <button *appGrant="'Projects'; action: grants['update']" mat-icon-button color="primary" (click)="editProject(project)" matTooltip="Edit Project">
               <mat-icon>edit</mat-icon>
             </button>
-            <button *appGrant="'Projects'; action: 'delete'" mat-icon-button color="warn" (click)="deleteProject(project)" matTooltip="Delete Project">
+            <button *appGrant="'Projects'; action: grants['delete']" mat-icon-button color="warn" (click)="deleteProject(project)" matTooltip="Delete Project">
               <mat-icon>delete</mat-icon>
             </button>
           </mat-card-actions>
@@ -81,10 +80,15 @@ interface Project {
 })
 export class ProjectListComponent implements OnInit {
   projects: Project[] = [];
+  grants: {[key: string]: string} = {
+    create: 'Projects.GetProjects',
+    update: 'Projects.UpdateProjects',
+    delete: 'Projects.DeleteProjects',
+    view: 'Projects.GetProjects'
+  }
 
   constructor(
-    private router: Router,
-    private accessService: AccessService
+    private router: Router
   ) {}
 
   ngOnInit() {

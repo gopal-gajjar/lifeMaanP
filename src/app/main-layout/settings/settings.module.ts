@@ -12,6 +12,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AccessGuard } from '../../core/guards/access.guard';
 import { AccessDeniedComponent } from '../../core/components/access-denied/access-denied.component';
 import { SettingsComponent } from 'src/app/main-layout/settings/settings.component';
+import { CoreModule } from 'src/app/core/core.module';
 
 const routes: Routes = [
   {
@@ -33,6 +34,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    CoreModule,
     RouterModule.forChild(routes),
     MatButtonModule,
     MatCardModule,

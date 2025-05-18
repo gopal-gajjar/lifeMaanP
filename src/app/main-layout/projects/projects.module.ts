@@ -13,6 +13,7 @@ import { ProjectEditComponent } from './project-edit/project-edit.component';
 import { ProjectDetailComponent } from './project-detail/project-detail.component';
 import { AccessGuard } from '../../core/guards/access.guard';
 import { AccessDeniedComponent } from '../../core/components/access-denied/access-denied.component';
+import { CoreModule } from 'src/app/core/core.module';
 
 const routes: Routes = [
   {
@@ -37,7 +38,7 @@ const routes: Routes = [
     path: ':id/edit',
     component: ProjectEditComponent,
     canActivate: [AccessGuard],
-    data: { module: 'Projects', action: 'Projects.EditProjects' }
+    data: { module: 'Projects', action: 'Projects.UpdateProjects' }
   },
   {
     path: 'access-denied',
@@ -54,6 +55,7 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    CoreModule,
     RouterModule.forChild(routes),
     MatButtonModule,
     MatCardModule,

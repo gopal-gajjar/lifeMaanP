@@ -17,7 +17,7 @@ interface Report {
       <div class="header">
         <h1>Report Details</h1>
         <div class="actions">
-          <button *ngIf="hasEditAccess" mat-raised-button color="primary" (click)="editReport()">
+          <button *appGrant="'Reports'; action: grants['edit']" mat-raised-button color="primary" (click)="editReport()">
             <mat-icon>edit</mat-icon>
             Edit Report
           </button>
@@ -112,18 +112,21 @@ export class ReportDetailComponent implements OnInit {
     createdAt: new Date(),
     updatedAt: new Date()
   };
-  hasEditAccess = false;
+  // hasEditAccess = false;
+  grants: {[key:string]: string} = {
+    edit: 'Reports.UpdateReports'
+  }
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private accessService: AccessService
+    // private accessService: AccessService
   ) {}
 
   ngOnInit() {
-    this.accessService.getAccessibleComponents('Reports').subscribe(actions => {
-      this.hasEditAccess = actions.includes('edit');
-    });
+    // this.accessService.getAccessibleComponents('Reports').subscribe(actions => {
+    //   this.hasEditAccess = actions.includes('edit');
+    // });
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {

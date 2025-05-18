@@ -26,7 +26,7 @@ interface Report {
         </div>
         <div class="actions">
           <button type="button" (click)="goBack()">Cancel</button>
-          <button type="submit">Save</button>
+          <button type="submit" *appGrant="'Reports'; action: isNew ? grants['create'] : grants['update'] ">Save</button>
         </div>
       </form>
     </div>
@@ -81,7 +81,10 @@ export class ReportEditComponent implements OnInit {
     updatedAt: new Date()
   };
   isNew = true;
-
+  grants: {[key: string]: string} = {
+    create: "Reports.CreateReports",
+    update: "Reports.UpdateReports"
+  }
   constructor(
     private route: ActivatedRoute,
     private router: Router
