@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
-import { AccessService } from '../core/services/access.service';
+import MainLayoutResolver, { MainLayoutData } from '../core/resolvers/main-layout.resolver';
 
 @Component({
   selector: 'app-main-layout',
@@ -63,6 +63,7 @@ import { AccessService } from '../core/services/access.service';
 export class MainLayoutComponent implements OnInit, AfterViewInit {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   modules: string[] = [];
+  moduleActions: { [key: string]: string[] } = {};
 
   private readonly moduleIcons: { [key: string]: string } = {
     Reports: 'assessment',
@@ -73,29 +74,44 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
   };
 
   constructor(
-    private accessService: AccessService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    console.log('MainLayoutComponent: Constructor called');
+  }
 
   ngOnInit() {
-    this.accessService.getAccessibleModules().subscribe({
-      next: (moduleNames) => {
-        this.modules = moduleNames;
+    console.log('MainLayoutComponent: ngOnInit called');
+    this.route.data.subscribe({
+      next: (data) => {
+        console.log('MainLayoutComponent: Received route data:', data);
+        const layoutData = data['layoutData'] as MainLayoutData;
+        this.modules = layoutData.modules;
+        this.moduleActions = layoutData.moduleActions;
+        
+        console.log('MainLayoutComponent: Updated modules:', this.modules);
+        console.log('MainLayoutComponent: Updated moduleActions:', this.moduleActions);
+        
         if (this.modules.length === 0) {
-          console.warn('No modules available for the current user');
+          console.warn('MainLayoutComponent: No modules available for the current user');
         }
       },
       error: (error) => {
-        console.error('Error loading modules:', error);
+        console.error('MainLayoutComponent: Error receiving route data:', error);
       }
     });
   }
 
   ngAfterViewInit() {
+    console.log('MainLayoutComponent: ngAfterViewInit called');
     this.sidenav.open();
   }
 
   getModuleIcon(moduleName: string): string {
     return this.moduleIcons[moduleName] || 'extension';
+  }
+
+  hasAction(moduleName: string, action: string): boolean {
+    return this.moduleActions[moduleName]?.includes(action) ?? false;
   }
 } 

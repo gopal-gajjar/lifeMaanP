@@ -17,7 +17,7 @@ export class GrantDirective implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.accessService.getAccessibleComponents(this.module).subscribe(actions => {
+    this.accessService.getModulePermissions(this.module).subscribe(actions => {
       this.hasAccess = actions.includes(this.action);
       this.updateView();
       this.cdr.detectChanges();

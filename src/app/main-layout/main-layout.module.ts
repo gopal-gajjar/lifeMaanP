@@ -9,11 +9,15 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { CoreModule } from '../core/core.module';
+import MainLayoutResolver from '../core/resolvers/main-layout.resolver';
 
 const routes: Routes = [
   {
     path: '',
     component: MainLayoutComponent,
+    resolve: {
+      layoutData: MainLayoutResolver
+    },
     children: [
       {
         path: 'reports',

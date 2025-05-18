@@ -2,23 +2,34 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { tap, switchMap } from 'rxjs/operators';
 import { GrantService } from './grant.service';
+import { AccessService } from 'src/app/core/services/access.service';
+import { ModuleDataService } from './data/module.data.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ModuleService {
-  private modulesCache: string[] | null = null;
+    private modulesCache: string[] | null = null;
   private availableModules = new BehaviorSubject<string[]>([]);
 
   // Available modules based on the provided permissions
-  private readonly mockModules = ['Reports', 'Files'];
+  private mockModules: string[] = [];
 
-  constructor(private grantService: GrantService) {
-    // Initialize with mock data
-    this.availableModules.next(this.mockModules);
-    this.modulesCache = this.mockModules;
-    // Fetch grants for available modules
-    this.fetchGrants(this.mockModules);
+  constructor(
+    private grantService: GrantService,
+    private accessService: AccessService,
+    private moduleDataService: ModuleDataService
+    ) {
+    this.initializeModules();
+  }
+
+  private initializeModules() {
+    this.moduleDataService.getModules().subscribe(modules => {
+      this.mockModules = modules;
+      this.availableModules.next(this.mockModules);
+      this.modulesCache = this.mockModules;
+      this.fetchGrants(this.mockModules);
+    });
   }
 
   getAvailableModules(): Observable<string[]> {
@@ -26,11 +37,10 @@ export class ModuleService {
       return of(this.modulesCache);
     }
 
-    return of(this.mockModules).pipe(
-      tap(modules => {
+    return this.moduleDataService.getModules().pipe(
+      tap((modules) => {
         this.modulesCache = modules;
         this.availableModules.next(modules);
-        // Fetch grants for new modules
         this.fetchGrants(modules);
       })
     );
@@ -52,5 +62,6 @@ export class ModuleService {
     this.modulesCache = null;
     this.availableModules.next([]);
     this.grantService.clearCache();
+    this.moduleDataService.clearModules().subscribe();
   }
 }

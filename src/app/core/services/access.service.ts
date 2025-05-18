@@ -1,81 +1,31 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
-
-export interface ModuleAccess {
-  moduleName: string;
-  allowedActions: string[];
-}
+import { Observable } from 'rxjs';
+import { AccessDataService, AccessModule } from './data/access.data.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccessService {
-  private moduleCache: string[] = [];
-  private actionCache: { [key: string]: string[] } = {};
+  constructor(private accessDataService: AccessDataService) {}
 
-  constructor() {
-    // Initialize with the provided permissions
-    this.moduleCache = ['Reports', 'Files', 'Users', 'Projects', 'Settings'];
-    this.actionCache = {
-      'Reports': [
-        'Reports.ListReports',
-        'Reports.GetReports',
-        'Reports.CreateReports',
-        'Reports.DeleteReports',
-        'Reports.UpdateReports'
-      ],
-      'Files': [
-        'Files.UpdateFiles',
-        'Files.ListFiles',
-        'Files.GetFiles',
-        'Files.UploadFiles',
-        'Files.DeleteFiles',
-        'Files.DownloadFiles',
-        'Files.ShareFiles'
-      ],
-      'Users': [
-        'Users.ListUsers',
-        'Users.GetUsers',
-        'Users.CreateUsers',
-        'Users.UpdateUsers',
-        'Users.DeleteUsers',
-        'Users.AssignRoles'
-      ],
-      'Projects': [
-        'Projects.ListProjects',
-        'Projects.GetProjects',
-        'Projects.CreateProjects',
-        'Projects.UpdateProjects',
-        'Projects.DeleteProjects',
-        'Projects.AssignTeam'
-      ],
-      'Settings': [
-        'Settings.ListSettings',
-        // 'Settings.GetSettings',
-        'Settings.UpdateSettings',
-        // 'Settings.ManageRoles',
-        // 'Settings.ManagePermissions'
-      ]
-    };
-
+  getAccessModules(): Observable<string[]> {
+    return this.accessDataService.getAccessModules().pipe(
+      map(modules => modules.map(module => module.moduleName))
+    );
   }
 
-  getAccessibleModules(): Observable<string[]> {
-    return of(this.moduleCache);
+  getModulePermissions(moduleName: string): Observable<string[]> {
+    return this.accessDataService.getModulePermissions(moduleName);
   }
 
-  getAccessibleComponents(moduleName: string): Observable<string[]> {
-    return of(this.actionCache[moduleName] || []);
+  hasPermission(moduleName: string, permission: string): Observable<boolean> {
+    return this.getModulePermissions(moduleName).pipe(
+      map(permissions => permissions.includes(permission))
+    );
   }
 
-  hasAccess(moduleName: string, action: string): boolean {
-    const actions = this.actionCache[moduleName] || [];
-    return actions.includes(action);
-  }
-
-  clearCache(): void {
-    this.moduleCache = [];
-    this.actionCache = {};
+  clearAccessCache(): void {
+    this.accessDataService.clearAccessModules().subscribe();
   }
 } 
